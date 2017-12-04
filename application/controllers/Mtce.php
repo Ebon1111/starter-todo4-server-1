@@ -33,7 +33,7 @@ class Mtce extends Application
 	// Extract & handle a page of items, defaulting to the beginning
 	function page($num = 1)
 	{
-	    $records = $this->XML_Tasks->all(); // get all the tasks
+	    $records = $this->Tasks->all(); // get all the tasks
 	    $tasks = array(); // start with an empty extract
 
 	    // use a foreach loop, because the record indices may not be sequential
@@ -57,7 +57,7 @@ class Mtce extends Application
 
 	// Build the pagination navbar
 	private function pagenav($num) {
-	    $lastpage = ceil($this->XML_Tasks->size() / $this->items_per_page);
+	    $lastpage = ceil($this->Tasks->size() / $this->items_per_page);
 	    $parms = array(
 	        'first' => 1,
 	        'previous' => (max($num-1,1)),
@@ -70,7 +70,7 @@ class Mtce extends Application
 	// Initiate adding a new task
 	public function add()
 	{
-	    $task = $this->XML_Tasks->create();
+	    $task = $this->Tasks->create();
 	    $this->session->set_userdata('task', $task);
 	    $this->showit();
 	}
@@ -80,7 +80,7 @@ class Mtce extends Application
 	{
 	    if ($id == null)
 	        redirect('/mtce');
-	    $task = $this->XML_Tasks->get($id);
+	    $task = $this->Tasks->get($id);
 	    $this->session->set_userdata('task', $task);
 	    $this->showit();
 	}
@@ -100,7 +100,7 @@ class Mtce extends Application
 	        $this->data['error'] = '';
 
 	    $fields = array(
-	        'ftask'      => form_label('Task description') . form_input('task', $task->name),
+	        'ftask'      => form_label('Task description') . form_input('task', $task->id),
 	        'fpriority'  => form_label('Priority') . form_dropdown('priority', $this->app->priority(), $task->priority),
 	        'zsubmit'    => form_submit('submit', 'Update the TODO task'),
 	    );
@@ -115,7 +115,7 @@ class Mtce extends Application
 	{
 	    // setup for validation
 	    $this->load->library('form_validation');
-	    $this->form_validation->set_rules($this->XML_Tasks->rules());
+	    $this->form_validation->set_rules($this->Tasks->rules());
 
 	    // retrieve & update data transfer buffer
 	    $task = (array) $this->session->userdata('task');
@@ -128,12 +128,12 @@ class Mtce extends Application
 	    {
 	        if (empty($task->id))
 	        {
-	            $task->id = $this->XML_Tasks->highest() + 1;
-	            $this->XML_Tasks->add($task);
+	            $task->id = $this->Tasks->highest() + 1;
+	            $this->Tasks->add($task);
 	            $this->alert('Task ' . $task->id . ' added', 'success');
 	        } else
 	        {
-	            $this->XML_Tasks->update($task);
+	            $this->Tasks->update($task);
 	            $this->alert('Task ' . $task->id . ' updated', 'success');
 	        }
 	    } else

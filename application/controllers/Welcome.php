@@ -19,8 +19,9 @@ class Welcome extends Application
 	 */
 	public function index()
 	{
-		$tasks = $this->XML_Tasks->all();   // get all the tasks
-
+		// $tasks = $this->XML_Tasks->all();   // get all the tasks
+		$tasks = $this->Tasks->all();
+		
 		// count how many are not done
 		$count = 0;
 		foreach($tasks as $task) {
@@ -31,7 +32,7 @@ class Welcome extends Application
 
 		// process the array in reverse, until we have five
 		$count = 0;
-		foreach(array_reverse($tasks) as $task) {
+		foreach(array_reverse((array) $tasks) as $task) {
 			$task->priority = $this->app->priority($task->priority);
 		    $display_tasks[] = (array) $task;
 		    $count++;
