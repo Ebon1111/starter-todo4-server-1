@@ -15,15 +15,7 @@ class Tasks extends CSV_Model {
 
     public function __construct()
     {
-        // load our data from the REST backend
-        $this->rest->initialize(array('server' => REST_SERVER));
-        $this->rest->option(CURLOPT_PORT, REST_PORT);
-        $this->_data =  $this->rest->get('job');
-
-		// rebuild the field names from the first object
-	    $one = array_values((array) $this->_data);
-		$this->_fields = array_keys((array)$one[0]);
-		$this->_keyfield = 'id';
+		$this->load();
     }
 
     // provide form validation rules
@@ -59,6 +51,18 @@ class Tasks extends CSV_Model {
 	        $converted[] = (array) $task;
 
 		return $converted;
+	}
+
+	protected function load() {
+		// load our data from the REST backend
+        $this->rest->initialize(array('server' => REST_SERVER));
+        $this->rest->option(CURLOPT_PORT, REST_PORT);
+        $this->_data =  $this->rest->get('job');
+
+		// rebuild the field names from the first object
+	    $one = array_values((array) $this->_data);
+		$this->_fields = array_keys((array)$one[0]);
+		$this->_keyfield = 'id';
 	}
     
     protected function store()
